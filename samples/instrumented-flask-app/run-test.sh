@@ -70,13 +70,29 @@ test_list_items() {
 
 # Function to test cache miss scenarios
 test_cache_miss() {
+    local count=0
     while [ $SECONDS -lt $DURATION ]; do
         # Generate random keys that likely don't exist (cache miss)
         random_key="cache_miss_$(date +%s)_$$_$RANDOM"
         curl -s "${BASE_URL}/items/$random_key" > /dev/null
-        sleep 0.5
+        count=$((count + 1))
+        sleep 0.3
     done
-    echo "Cache miss endpoint completed"
+    echo "Cache miss endpoint completed: $count requests"
+}
+
+# Function to test specific cache miss patterns
+test_cache_miss_patterns() {
+    local count=0
+    while [ $SECONDS -lt $DURATION ]; do
+        # Test different patterns of cache misses
+        patterns=("user_$(date +%s)" "product_$RANDOM" "session_$(date +%s)_$RANDOM" "temp_$RANDOM")
+        pattern=${patterns[$RANDOM % ${#patterns[@]}]}
+        curl -s "${BASE_URL}/items/$pattern" > /dev/null
+        count=$((count + 1))
+        sleep 0.2
+    done
+    echo "Cache miss patterns completed: $count requests"
 }
 
 # Check if the app is running
@@ -100,6 +116,7 @@ test_add_item &
 test_get_item &
 test_list_items &
 test_cache_miss &
+test_cache_miss_patterns &
 
 # Wait for all background jobs to complete
 wait
