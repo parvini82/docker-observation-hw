@@ -837,7 +837,7 @@
                 "uid": "prometheus"
               },
               "editorMode": "code",
-              "expr": "rate(redis_app_cache_hit_total[1m]) / (rate(redis_app_cache_hit_total[1m]) + rate(redis_app_cache_miss_total[1m])) * 100",
+              "expr": "sum(rate(redis_app_cache_hit_total[1m])) / clamp_min(sum(rate(redis_app_cache_hit_total[1m])) + sum(rate(redis_app_cache_miss_total[1m])), 1e-9) * 100",
               "instant": false,
               "legendFormat": "Cache Hit Rate",
               "range": true,
@@ -943,6 +943,104 @@
             }
           ],
           "title": "Redis Cache Miss Rate",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 10,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "vis": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 8
+          },
+          "id": 14,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "increase(redis_app_cache_miss_total[1m])",
+              "instant": false,
+              "legendFormat": "Cache Misses - {{key}}",
+              "range": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Redis Cache Miss Count",
           "type": "timeseries"
         }
       ],
