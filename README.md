@@ -122,7 +122,7 @@ curl http://localhost:9000/metrics
 - **Redis Cache Miss Count**: Total cache miss count
 
 ### Dashboard Screenshot:
-![Screenshot-1.png](instrumented-flask-app/Screenshot-1.png)
+![Screenshot-1.png](instrumented-flask-app/img/Screenshot-1.png)
 ## Prometheus Configuration
 
 ### Scrape Configuration:
